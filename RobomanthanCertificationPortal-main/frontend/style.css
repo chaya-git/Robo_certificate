@@ -1,0 +1,361 @@
+/* ---------- GLOBAL ---------- */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f3f5;
+  transition: 0.3s;
+}
+
+/* ---------- NAVBAR ---------- */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 30px;
+
+  background: #131921;
+  color: white;
+
+  border-radius: 15px;
+
+  margin: 10px;
+}
+
+.navbar h1 {
+  margin: 0;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: #ff9900;
+}
+
+/* ---------- BUTTONS ---------- */
+
+button {
+  padding: 12px 20px;
+
+  background: #ff9900;
+
+  border: none;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #e68a00;
+
+  transform: translateY(-3px);
+
+  box-shadow: 0px 5px 15px rgba(255, 153, 0, 0.4);
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+  text-align: center;
+  margin-top: 120px;
+}
+
+.hero h1 {
+  font-size: 60px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 22px;
+  color: gray;
+  margin-bottom: 30px;
+}
+
+/* ---------- VERIFY PAGE ---------- */
+
+.verify-container {
+  width: 80%;
+  max-width: 700px;
+
+  margin: 80px auto;
+
+  text-align: center;
+
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 15px;
+
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- INPUTS ---------- */
+
+input {
+  width: 100%;
+
+  padding: 15px;
+
+  margin: 12px 0;
+
+  border-radius: 10px;
+
+  border: 1px solid #ccc;
+
+  box-sizing: border-box;
+
+  transition: 0.3s;
+}
+
+input:focus {
+  outline: none;
+
+  border: 2px solid #ff9900;
+
+  box-shadow: 0 0 10px rgba(255, 153, 0, 0.4);
+}
+
+/* ---------- ADMIN ---------- */
+
+.admin-title {
+  text-align: center;
+
+  font-size: 70px;
+
+  margin-top: 40px;
+}
+
+#useType {
+  display: block;
+
+  margin: 30px auto;
+
+  padding: 12px;
+
+  font-size: 18px;
+
+  border-radius: 10px;
+}
+
+/* ---------- ADMIN SECTIONS ---------- */
+
+#addSection,
+#editSection,
+#deleteSection {
+  width: 70%;
+
+  margin: 40px auto;
+
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 15px;
+
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+
+  animation: fadeIn 0.4s ease;
+}
+
+#addSection h2,
+#editSection h2,
+#deleteSection h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* ---------- SUCCESS ---------- */
+
+.success {
+  margin-top: 25px;
+
+  padding: 20px;
+
+  border-radius: 10px;
+
+  background: #d4edda;
+
+  border-left: 6px solid green;
+}
+
+/* ---------- ERROR ---------- */
+
+.error {
+  margin-top: 25px;
+
+  padding: 20px;
+
+  border-radius: 10px;
+
+  background: #f8d7da;
+
+  border-left: 6px solid red;
+
+  color: #721c24;
+}
+
+/* ---------- ANIMATION ---------- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- DARK MODE ---------- */
+
+.dark {
+  background: #121212;
+  color: white;
+}
+
+.dark .navbar {
+  background: #1a1a1a;
+}
+
+.dark .hero p {
+  color: #bbbbbb;
+}
+
+.dark #addSection,
+.dark #editSection,
+.dark #deleteSection,
+.dark .verify-container {
+  background: #1e1e1e;
+  color: white;
+}
+
+.dark input,
+.dark select {
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+}
+
+.dark .nav-links a {
+  color: white;
+}
+
+.dark .nav-links a:hover {
+  color: #ff9900;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .navbar-right {
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 40px;
+  }
+
+  .admin-title {
+    font-size: 40px;
+  }
+
+  #addSection,
+  #editSection,
+  #deleteSection {
+    width: 90%;
+  }
+
+  .verify-container {
+    width: 90%;
+    border-radius: 15px;
+
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+
+    animation: fadeIn 0.4s ease;
+  }
+}
+
+#certificateType {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.certificate-type-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+#addSection {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+#useCustomDescription{
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.signature-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.signature-section label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.signature-section select {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  border-radius: 6px;
+}

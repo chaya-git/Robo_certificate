@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <h1>🤖 Robomanthan Certificates</h1>
+
+      <div class="navbar-right">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify Certificate</a>
+          <a href="admin.html">Admin</a>
+        </div>
+
+        <button id="modeBtn" onclick="toggleMode()">🌙 Dark Mode</button>
+      </div>
+    </div>
+    <h1 class="admin-title">Admin Portal</h1>
+
+    <select id="useType" onchange="showSection()">
+      <option value="add">Add Certificate</option>
+      <option value="edit">Edit Certificate</option>
+      <option value="delete">Delete Certificate</option>
+    </select>
+
+    <div id="addSection">
+      <h2>Add Certificate</h2>
+
+      <div class="certificate-type-row">
+        <label>Certificate Type</label>
+
+        <select id="certificateType" onchange="changeCertificateType()">
+          <option value="internship">Internship</option>
+          <option value="course">Course</option>
+          <option value="hackathon">Hackathon</option>
+          <option value="fulltime">Fulltime/Experience</option>
+        </select>
+      </div>
+
+      <div id="descriptionSection" style="display: none">
+        <label>Use Custom Description?</label>
+
+        <select id="useCustomDescription" onchange="toggleDescriptionBox()">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <textarea
+          id="customDescription"
+          placeholder="Enter custom description"
+          style="display: none; width: 100%; height: 100px"
+        >
+        </textarea>
+      </div>
+
+      <input id="certificateId" placeholder="Certificate ID" />
+
+      <input id="recipientName" placeholder="Recipient Name" />
+
+      <input id="collegeName" placeholder="College Name" />
+
+      <input id="programName" placeholder="Program Name" />
+
+      <input id="role" placeholder="Role" />
+
+      <input id="department" placeholder="Department" />
+
+      <label>Start Date</label>
+      <input id="startDate" type="date" />
+
+      <label>End Date</label>
+      <input id="endDate" type="date" />
+
+      <label>Issue Date</label>
+      <input id="issueDate" type="date" />
+
+      <div class="signature-section">
+        <label>Include Authorized Signature</label>
+        <select id="includeAuthorizedSign">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <label>Second Signatory</label>
+        <select id="secondSignatory" onchange="changeSecondSignatory()">
+          <option value="CMO">CMO</option>
+          <option value="other">Other</option>
+          <!-- <option value="HR Manager">HR Manager</option>
+          <option value="HOD">HOD</option>
+          <option value="Trainer">Trainer</option> -->
+        </select>
+
+        <div id="otherSignatoryFields" style="display: none">
+          <label>Name</label>
+          <input id="otherSignatoryName" />
+
+          <label>Designation / Organization</label>
+          <input id="otherSignatoryDesignation" />
+        </div>
+
+        <div id="includeSecondSignContainer">
+          <label>Include Second Signature</label>
+          <br />
+          <br />
+          <select id="includeSecondSign">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <!-- THIRD SIGNATORY -->
+
+        <label>Include Third Signatory</label>
+        <select id="includeThirdSign" onchange="changeThirdSignatory()">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <div id="thirdSignatoryFields" style="display: none">
+          <label>Name</label>
+          <input id="thirdSignatoryName" />
+
+          <label>Designation / Organization</label>
+          <input id="thirdSignatoryDesignation" />
+        </div>
+
+        <br />
+
+        <!-- FOURTH SIGNATORY -->
+
+        <label>Include Fourth Signatory</label>
+        <select id="includeFourthSign" onchange="changeFourthSignatory()">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <div id="fourthSignatoryFields" style="display: none">
+          <label>Name</label>
+          <input id="fourthSignatoryName" />
+
+          <label>Designation / Organization</label>
+          <input id="fourthSignatoryDesignation" />
+        </div>
+
+        <label>Organization Logo (Optional)</label>
+        <input type="file" id="organizationLogo" accept=".png,.jpg,.jpeg" />
+      </div>
+      <br />
+      <button onclick="generateCertificate()">Generate Certificate</button>
+
+      <div id="generateResult"></div>
+
+      <!-- <button onclick="addCertificate()">Add Certificate</button> -->
+    </div>
+
+    <div id="editSection" style="display: none">
+      <h2>Edit Certificate</h2>
+
+      <input type="text" id="editId" placeholder="Certificate ID" />
+
+      <button onclick="searchCertificate()">Search</button>
+
+      <br />
+      <div id="searchResult"></div>
+      <br />
+
+      <input type="file" id="newCertificateFile" accept=".pdf" />
+
+      <button onclick="updateCertificate()">Update Certificate</button>
+    </div>
+
+    <div id="deleteSection" style="display: none">
+      <h2>Delete Certificate</h2>
+
+      <input type="text" id="deleteId" placeholder="Certificate ID" />
+
+      <button onclick="deleteCertificate()">Delete Certificate</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

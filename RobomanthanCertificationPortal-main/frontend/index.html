@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Robomanthan Certificate Verification Home Page</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <h1>🤖 Robomanthan Certificates</h1>
+
+      <div class="navbar-right">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify Certificate</a>
+          <a href="#" onclick="openAdminLogin()">Admin</a>
+        </div>
+        <button id="modeBtn" onclick="toggleMode()">🌙 Dark Mode</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1>Certificate Verification Portal</h1>
+
+      <p>Verify RoboManthan internship and training certificates instantly.</p>
+
+      <button onclick="location.href = 'verify.html'">
+        Verify Certificate
+      </button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

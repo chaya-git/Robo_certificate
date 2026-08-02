@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certificate Verification Portal</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <h1>🤖 Robomanthan Certificates</h1>
+
+      <div class="navbar-right">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="verify.html">Verify Certificate</a>
+          <a href="#" onclick="openAdminLogin()">Admin</a>
+        </div>
+
+        <button id="modeBtn" onclick="toggleMode()">🌙 Dark Mode</button>
+      </div>
+    </div>
+    <div class="verify-container">
+      <h1>Verify Certificate</h1>
+
+      <input type="text" id="certificateId" placeholder="RM-FS-2026-0001" />
+
+      <button onclick="verifyCertificate()">Verify</button>
+
+      <div id="result"></div>
+    </div>
+    
+    <script src="script.js"></script>
+  </body>
+</html>
