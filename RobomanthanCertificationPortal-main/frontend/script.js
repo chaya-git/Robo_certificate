@@ -5,7 +5,7 @@ const API_BASE_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
     ? "http://localhost:5000"
-    : "https://robo-certificate.onrender.com"; // <-- change this after deploying the backend
+    : "https://robomanthan-backend.onrender.com"; // <-- change this after deploying the backend
 
 if (window.location.pathname.includes("admin.html")) {
   if (localStorage.getItem("adminAccess") !== "true") {
@@ -257,22 +257,31 @@ async function openAdminLogin() {
 
   if (!password) return;
 
-  const response = await fetch(`${API_BASE_URL}/adminLogin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ password }),
-  });
+  try {
+    console.log("Logging in via:", `${API_BASE_URL}/adminLogin`);
 
-  const result = await response.json();
-  
-  if (result.success) {
-    localStorage.setItem("adminAccess", "true");
+    const response = await fetch(`${API_BASE_URL}/adminLogin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password }),
+    });
 
-    window.location.href = "admin.html";
-  } else {
-    alert("Wrong Password");
+    const result = await response.json();
+
+    if (result.success) {
+      localStorage.setItem("adminAccess", "true");
+
+      window.location.href = "admin.html";
+    } else {
+      alert("Wrong Password");
+    }
+  } catch (err) {
+    console.error("Admin login failed:", err);
+    alert(
+      "Could not reach the server. It may be waking up (Render free tier can take up to a minute) — please wait and try again. If this keeps happening, check the browser console for details.",
+    );
   }
 }
 
