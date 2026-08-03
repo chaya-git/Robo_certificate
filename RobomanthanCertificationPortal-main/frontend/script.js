@@ -5,7 +5,7 @@ const API_BASE_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
     ? "http://localhost:5000"
-    : "https://robomanthan-backend.onrender.com"; // <-- change this after deploying the backend
+   : "https://robo-certificate.onrender.com"; // <-- change this after deploying the backend
 
 if (window.location.pathname.includes("admin.html")) {
   if (localStorage.getItem("adminAccess") !== "true") {
