@@ -243,7 +243,7 @@ app.post("/adminLogin", (req, res) => {
 
 const signMap = {
   CMO: {
-    image: "cmo_sir.png",
+    image: "Sukumar_Sir.png",
     lines: ["Mr. Sukumar G", "CMO, Robomanthan"],
   },
 };
@@ -425,7 +425,7 @@ app.post(
 
       if (includeAuthorizedSign === "yes") {
         const signBytes = fs.readFileSync(
-          path.join(__dirname, "signatures", "authorized.png"),
+          path.join(__dirname, "signatures", "Saurav_Sir.png"),
         );
         
         authorizedSignImage = await pdfDoc.embedPng(signBytes);
