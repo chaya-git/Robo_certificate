@@ -97,11 +97,15 @@ function showSection() {
   const value = document.getElementById("useType").value;
 
   document.getElementById("addSection").style.display = "none";
+  document.getElementById("bundleSection").style.display = "none";
   document.getElementById("editSection").style.display = "none";
   document.getElementById("deleteSection").style.display = "none";
 
   if (value === "add")
     document.getElementById("addSection").style.display = "block";
+
+  if (value === "bundle")
+    document.getElementById("bundleSection").style.display = "block";
 
   if (value === "edit")
     document.getElementById("editSection").style.display = "block";
@@ -507,4 +511,175 @@ function changeFourthSignatory() {
 
   document.getElementById("fourthSignatoryFields").style.display =
     value === "yes" ? "block" : "none";
+}
+
+// ---------- Bundle Download ----------
+
+function changeCertificateTypeBundle() {
+  const descriptionSection = document.getElementById("descriptionSectionBundle");
+  const type = document.getElementById("certificateTypeBundle").value;
+
+  const collegeName = document.getElementById("collegeNameBundle");
+  const programName = document.getElementById("programNameBundle");
+  const role = document.getElementById("roleBundle");
+  const department = document.getElementById("departmentBundle");
+
+  if (type === "internship") {
+    descriptionSection.style.display = "none";
+    collegeName.placeholder = "College Name";
+    programName.placeholder = "Program Name";
+    role.placeholder = "Role";
+    department.placeholder = "Department";
+  } else if (type === "course") {
+    descriptionSection.style.display = "block";
+    collegeName.placeholder = "College Name";
+    programName.placeholder = "Course Name";
+    role.placeholder = "Trainer";
+    department.placeholder = "Course Domain";
+  } else if (type === "hackathon") {
+    descriptionSection.style.display = "block";
+    collegeName.placeholder = "College Name";
+    programName.placeholder = "Hackathon Name";
+    role.placeholder = "Team Name";
+    department.placeholder = "Team Rank";
+  } else if (type === "fulltime") {
+    descriptionSection.style.display = "none";
+    collegeName.placeholder = "Designation";
+    programName.placeholder = "Employee ID";
+    role.placeholder = "Department";
+  }
+}
+
+function toggleDescriptionBoxBundle() {
+  const useCustom = document.getElementById("useCustomDescriptionBundle").value;
+
+  document.getElementById("customDescriptionBundle").style.display =
+    useCustom === "yes" ? "block" : "none";
+}
+
+function changeSecondSignatoryBundle() {
+  const value = document.getElementById("secondSignatoryBundle").value;
+
+  const div = document.getElementById("otherSignatoryFieldsBundle");
+  const includeDiv = document.getElementById("includeSecondSignContainerBundle");
+
+  if (value === "other") {
+    div.style.display = "block";
+    includeDiv.style.display = "none";
+  } else {
+    div.style.display = "none";
+    includeDiv.style.display = "block";
+  }
+}
+
+function changeThirdSignatoryBundle() {
+  const value = document.getElementById("includeThirdSignBundle").value;
+
+  document.getElementById("thirdSignatoryFieldsBundle").style.display =
+    value === "yes" ? "block" : "none";
+}
+
+function changeFourthSignatoryBundle() {
+  const value = document.getElementById("includeFourthSignBundle").value;
+
+  document.getElementById("fourthSignatoryFieldsBundle").style.display =
+    value === "yes" ? "block" : "none";
+}
+
+// Parses the "Name, RM ID" textarea into [{ recipientName, certificateId }, ...]
+function parseStudentsList(raw) {
+  return raw
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .map((line) => {
+      const parts = line.split(",");
+      const recipientName = (parts[0] || "").trim();
+      const certificateId = (parts.slice(1).join(",") || "").trim();
+      return { recipientName, certificateId };
+    });
+}
+
+async function generateBundleCertificates() {
+  const resultDiv = document.getElementById("bundleResult");
+
+  try {
+    const studentsRaw = document.getElementById("studentsList").value;
+    const students = parseStudentsList(studentsRaw);
+
+    if (students.length === 0) {
+      alert("Please enter at least one student (Name, RM ID) — one per line.");
+      return;
+    }
+
+    const invalid = students.find((s) => !s.recipientName || !s.certificateId);
+    if (invalid) {
+      alert(
+        `Every line needs both a name and an RM ID, separated by a comma.\nProblem line: "${invalid.recipientName}, ${invalid.certificateId}"`,
+      );
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("collegeName", document.getElementById("collegeNameBundle").value);
+    formData.append("programName", document.getElementById("programNameBundle").value);
+    formData.append("role", document.getElementById("roleBundle").value);
+    formData.append("department", document.getElementById("departmentBundle").value);
+    formData.append("startDate", document.getElementById("startDateBundle").value);
+    formData.append("endDate", document.getElementById("endDateBundle").value);
+    formData.append("issueDate", document.getElementById("issueDateBundle").value);
+    formData.append("certificateType", document.getElementById("certificateTypeBundle").value);
+    formData.append("customDescription", document.getElementById("customDescriptionBundle").value);
+    formData.append("useCustomDescription", document.getElementById("useCustomDescriptionBundle").value);
+    formData.append("includeAuthorizedSign", document.getElementById("includeAuthorizedSignBundle").value);
+    formData.append("secondSignatory", document.getElementById("secondSignatoryBundle").value);
+    formData.append("includeSecondSign", document.getElementById("includeSecondSignBundle").value);
+    formData.append("otherSignatoryName", document.getElementById("otherSignatoryNameBundle").value);
+    formData.append("otherSignatoryDesignation", document.getElementById("otherSignatoryDesignationBundle").value);
+    formData.append("includeThirdSign", document.getElementById("includeThirdSignBundle").value);
+    formData.append("thirdSignatoryName", document.getElementById("thirdSignatoryNameBundle").value);
+    formData.append("thirdSignatoryDesignation", document.getElementById("thirdSignatoryDesignationBundle").value);
+    formData.append("includeFourthSign", document.getElementById("includeFourthSignBundle").value);
+    formData.append("fourthSignatoryName", document.getElementById("fourthSignatoryNameBundle").value);
+    formData.append("fourthSignatoryDesignation", document.getElementById("fourthSignatoryDesignationBundle").value);
+    formData.append("students", JSON.stringify(students));
+
+    const logoFile = document.getElementById("organizationLogoBundle").files[0];
+    if (logoFile) {
+      formData.append("organizationLogo", logoFile);
+    }
+
+    resultDiv.innerHTML = `<p>Generating ${students.length} certificates… this can take a little while.</p>`;
+
+    const response = await fetch(`${API_BASE_URL}/generateBulkCertificates`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      let message = "Failed to generate the bundle.";
+      try {
+        const err = await response.json();
+        message = err.message || message;
+      } catch (e) {}
+      resultDiv.innerHTML = `<p style="color:red">${message}</p>`;
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `certificates_bundle_${Date.now()}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
+    resultDiv.innerHTML = `<p>✅ Downloaded ${students.length} certificates as a zip.</p>`;
+  } catch (err) {
+    console.error(err);
+    resultDiv.innerHTML = `<p style="color:red">Error generating bundle: ${err.message}</p>`;
+  }
 }
