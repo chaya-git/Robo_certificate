@@ -5,6 +5,7 @@ const { Pool } = require("pg");
 require("dotenv").config();
 const multer = require("multer");
 const QRCode = require("qrcode");
+const archiver = require("archiver");
 app.use("/uploads", express.static("uploads"));
 app.use("/generated-certificates", express.static("generated-certificates"));
 
@@ -255,14 +256,12 @@ const LOGO = {
   height: 90,
 };
 
-app.post(
-  "/generateCertificate",
-  upload.single("organizationLogo"),
-  async (req, res) => {
-    // console.log("Route reached");
-    // console.log(req.body);
-    // console.log(req.file);
-    try {
+// Builds a single certificate PDF and persists it (DB row + file on disk).
+// `fields` is the same shape as req.body for /generateCertificate.
+// `logoFile` is the same shape as req.file (multer) — pass null if none.
+// Returns { pdfBytes, pdfFileName, certificateId } instead of sending a response,
+// so it can be reused by both the single-certificate route and the bulk route.
+async function buildCertificatePdf(fields, logoFile) {
       const {
         certificateId,
         recipientName,
@@ -287,7 +286,7 @@ app.post(
         includeFourthSign,
         fourthSignatoryName,
         fourthSignatoryDesignation,
-      } = req.body;
+      } = fields;
 
       
 
@@ -347,10 +346,10 @@ app.post(
       
       let organizationLogoImage = null;
 
-      if (req.file) {
-        const logoBytes = fs.readFileSync(req.file.path);
+      if (logoFile) {
+        const logoBytes = fs.readFileSync(logoFile.path);
 
-        if (req.file.mimetype === "image/png") {
+        if (logoFile.mimetype === "image/png") {
           organizationLogoImage = await pdfDoc.embedPng(logoBytes);
         } else {
           organizationLogoImage = await pdfDoc.embedJpg(logoBytes);
@@ -1618,11 +1617,23 @@ app.post(
   `,
         [`generated-certificates/${pdfFileName}`, certificateId],
       );
-      
+
+      return { pdfBytes, pdfFileName, certificateId };
+}
+
+// Single-certificate route — unchanged behaviour, now just a thin wrapper
+// around buildCertificatePdf().
+app.post(
+  "/generateCertificate",
+  upload.single("organizationLogo"),
+  async (req, res) => {
+    try {
+      const result = await buildCertificatePdf(req.body, req.file);
+
       res.json({
         success: true,
         message: "Certificate generated successfully",
-        pdf: pdfFileName,
+        pdf: result.pdfFileName,
       });
     } catch (err) {
       console.error(err);
@@ -1631,6 +1642,105 @@ app.post(
         success: false,
         message: err.message,
       });
+    }
+  },
+);
+
+// Bundle / bulk route — same fields as /generateCertificate, but
+// `certificateId` and `recipientName` are supplied per-student via a
+// "students" field: a JSON string like
+// [{ "certificateId": "RM001", "recipientName": "Asha Rao" }, ...]
+// Everything else (certificateType, dates, signatories, logo, etc.) is
+// shared across every certificate in the batch. Streams back a .zip.
+app.post(
+  "/generateBulkCertificates",
+  upload.single("organizationLogo"),
+  async (req, res) => {
+    let students;
+
+    try {
+      students = JSON.parse(req.body.students || "[]");
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid students list — could not parse JSON.",
+      });
+    }
+
+    if (!Array.isArray(students) || students.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide at least one student (name + certificate ID).",
+      });
+    }
+
+    if (students.length > 200) {
+      return res.status(400).json({
+        success: false,
+        message: "Please generate at most 200 certificates per bundle.",
+      });
+    }
+
+    try {
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="certificates_bundle_${Date.now()}.zip"`,
+      );
+
+      const archive = archiver("zip", { zlib: { level: 9 } });
+
+      archive.on("error", (err) => {
+        throw err;
+      });
+
+      archive.pipe(res);
+
+      const failed = [];
+
+      for (const student of students) {
+        const certificateId = (student.certificateId || "").trim();
+        const recipientName = (student.recipientName || "").trim();
+
+        if (!certificateId || !recipientName) {
+          failed.push(`(missing name or RM id) — skipped`);
+          continue;
+        }
+
+        try {
+          const fields = {
+            ...req.body,
+            certificateId,
+            recipientName,
+          };
+
+          const result = await buildCertificatePdf(fields, req.file);
+
+          archive.append(Buffer.from(result.pdfBytes), {
+            name: `${result.certificateId}.pdf`,
+          });
+        } catch (err) {
+          console.error(`Bulk generation failed for ${certificateId}:`, err);
+          failed.push(`${certificateId} - ${recipientName}: ${err.message}`);
+        }
+      }
+
+      if (failed.length > 0) {
+        archive.append(failed.join("\n"), { name: "failed_certificates.txt" });
+      }
+
+      await archive.finalize();
+    } catch (err) {
+      console.error(err);
+
+      if (!res.headersSent) {
+        res.status(500).json({
+          success: false,
+          message: err.message,
+        });
+      } else {
+        res.end();
+      }
     }
   },
 );
