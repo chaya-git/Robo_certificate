@@ -6,6 +6,14 @@ require("dotenv").config();
 const multer = require("multer");
 const QRCode = require("qrcode");
 const archiver = require("archiver");
+
+// This is what gets baked into every certificate's QR code, so it MUST be
+// a URL your phone (on any network) can actually reach — not localhost.
+// Set FRONTEND_URL in your .env to wherever verify.html is really hosted,
+// e.g. FRONTEND_URL=https://your-frontend.onrender.com or your GitHub
+// Pages / Netlify / Vercel URL. Falls back to localhost only for local
+// testing on the same machine.
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5500/frontend";
 app.use("/uploads", express.static("uploads"));
 app.use("/generated-certificates", express.static("generated-certificates"));
 
@@ -414,7 +422,7 @@ async function buildCertificatePdf(fields, logoFile) {
       }
 
       
-      const verifyUrl = `http://localhost:5500/frontend/verify.html?id=${certificateId}`;
+      const verifyUrl = `${FRONTEND_URL}/verify.html?id=${certificateId}`;
 
       const qrImageBytes = await QRCode.toBuffer(verifyUrl);
 
