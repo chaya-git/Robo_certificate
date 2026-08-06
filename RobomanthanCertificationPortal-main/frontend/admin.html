@@ -24,6 +24,7 @@
 
     <select id="useType" onchange="showSection()">
       <option value="add">Add Certificate</option>
+      <option value="bundle">Bundle Download</option>
       <option value="edit">Edit Certificate</option>
       <option value="delete">Delete Certificate</option>
     </select>
@@ -156,6 +157,141 @@
       <div id="generateResult"></div>
 
       <!-- <button onclick="addCertificate()">Add Certificate</button> -->
+    </div>
+
+    <div id="bundleSection" style="display: none">
+      <h2>Bundle Download</h2>
+      <p>
+        Fill in everything below <strong>once</strong> — it will be reused
+        for every certificate. Then list each student's name and RM ID
+        (one per line) to generate and download all certificates as a
+        single .zip.
+      </p>
+
+      <div class="certificate-type-row">
+        <label>Certificate Type</label>
+
+        <select id="certificateTypeBundle" onchange="changeCertificateTypeBundle()">
+          <option value="internship">Internship</option>
+          <option value="course">Course</option>
+          <option value="hackathon">Hackathon</option>
+          <option value="fulltime">Fulltime/Experience</option>
+        </select>
+      </div>
+
+      <div id="descriptionSectionBundle" style="display: none">
+        <label>Use Custom Description?</label>
+
+        <select id="useCustomDescriptionBundle" onchange="toggleDescriptionBoxBundle()">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <textarea
+          id="customDescriptionBundle"
+          placeholder="Enter custom description"
+          style="display: none; width: 100%; height: 100px"
+        >
+        </textarea>
+      </div>
+
+      <input id="collegeNameBundle" placeholder="College Name" />
+
+      <input id="programNameBundle" placeholder="Program Name" />
+
+      <input id="roleBundle" placeholder="Role" />
+
+      <input id="departmentBundle" placeholder="Department" />
+
+      <label>Start Date</label>
+      <input id="startDateBundle" type="date" />
+
+      <label>End Date</label>
+      <input id="endDateBundle" type="date" />
+
+      <label>Issue Date</label>
+      <input id="issueDateBundle" type="date" />
+
+      <div class="signature-section">
+        <label>Include Authorized Signature</label>
+        <select id="includeAuthorizedSignBundle">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <label>Second Signatory</label>
+        <select id="secondSignatoryBundle" onchange="changeSecondSignatoryBundle()">
+          <option value="CMO">CMO</option>
+          <option value="other">Other</option>
+        </select>
+
+        <div id="otherSignatoryFieldsBundle" style="display: none">
+          <label>Name</label>
+          <input id="otherSignatoryNameBundle" />
+
+          <label>Designation / Organization</label>
+          <input id="otherSignatoryDesignationBundle" />
+        </div>
+
+        <div id="includeSecondSignContainerBundle">
+          <label>Include Second Signature</label>
+          <br />
+          <br />
+          <select id="includeSecondSignBundle">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <label>Include Third Signatory</label>
+        <select id="includeThirdSignBundle" onchange="changeThirdSignatoryBundle()">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <div id="thirdSignatoryFieldsBundle" style="display: none">
+          <label>Name</label>
+          <input id="thirdSignatoryNameBundle" />
+
+          <label>Designation / Organization</label>
+          <input id="thirdSignatoryDesignationBundle" />
+        </div>
+
+        <br />
+
+        <label>Include Fourth Signatory</label>
+        <select id="includeFourthSignBundle" onchange="changeFourthSignatoryBundle()">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <div id="fourthSignatoryFieldsBundle" style="display: none">
+          <label>Name</label>
+          <input id="fourthSignatoryNameBundle" />
+
+          <label>Designation / Organization</label>
+          <input id="fourthSignatoryDesignationBundle" />
+        </div>
+
+        <label>Organization Logo (Optional)</label>
+        <input type="file" id="organizationLogoBundle" accept=".png,.jpg,.jpeg" />
+      </div>
+
+      <br />
+
+      <label>Students — one per line, as: Name, RM ID</label>
+      <textarea
+        id="studentsList"
+        placeholder="Asha Rao, RM001&#10;Kiran Patel, RM002&#10;Meera Shah, RM003"
+        style="width: 100%; height: 220px"
+      ></textarea>
+
+      <br /><br />
+      <button onclick="generateBundleCertificates()">
+        Generate &amp; Download Bundle
+      </button>
+
+      <div id="bundleResult"></div>
     </div>
 
     <div id="editSection" style="display: none">
